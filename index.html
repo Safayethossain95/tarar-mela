@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive Navbar</title>
+    <!-- Tailwind CSS CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts (Noto Sans Bengali) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMDJ8u8fT4f605Gf0I32H3M58bV2uO/Lp99s1w7bKjK6l8bM/F8F8g7gY8W5Pqg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      /* Apply the Bengali font */
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f7f7f3; /* Light beige background */
+      }
+
+      /* --- Custom Slider Styles --- */
+
+      .slider-item {
+        flex-shrink: 0; /* Prevents slides from shrinking */
+        height: 400px;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        transition: all 0.5s ease-out; /* Smooth transitions for size and position */
+        margin-right: 16px; /* Default space-x-4 (16px) */
+        /* Default space-x-4 (16px) */
+        /* Add padding inside the slide to frame the contained image */
+        padding: 10px;
+        background-color: #fff;
+      }
+
+      .slider-wrapper {
+        display: flex;
+        transition: transform 0.5s ease-out; /* Smooth transition for sliding */
+        align-items: center; /* Vertically center slides if heights differ */
+      }
+
+      .slider-viewport {
+        overflow: hidden;
+        width: 100%; /* Take full width for calculation purposes */
+      }
+
+      /* Default (mobile-first) styles: one main slide, with peeking sides */
+      .slider-item {
+        width: 80vw; /* Main slide size for mobile */
+        max-width: 600px;
+        height: auto;
+      }
+
+      .slider-item:not(.active-slide) {
+        opacity: 0.7;
+        transform: scale(0.9); /* Slightly smaller peek for mobile */
+      }
+      .active-slide {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      /* Custom navigation button styling */
+      .custom-nav-btn {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid #555;
+        border-radius: 9999px;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: #555;
+        background-color: transparent;
+        outline: none;
+      }
+      .custom-nav-btn:hover {
+        background-color: #e0e0d8;
+      }
+      .custom-nav-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      /* Responsive adjustments for tablet/desktop (md breakpoint and up) */
+      @media (min-width: 768px) {
+        .slider-wrapper {
+          height: 500px;
+        }
+        .slider-item {
+          /* Reset mobile specific sizes if not intended for peek sides */
+          width: calc(
+            (100% - (var(--main-slide-width) + 2 * var(--gap))) / 2
+          ); /* Calculate width for side slides */
+          max-width: none; /* Allow calculation to dictate width */
+          height: auto; /* Base height for side slides */
+          margin-right: var(--gap); /* Use CSS variable for consistent gap */
+        }
+
+        .slider-item.active-slide {
+          width: var(--main-slide-width); /* Larger main slide */
+          height: auto; /* Taller main slide */
+        }
+
+        .slider-viewport {
+          /* On larger screens, the padding helps center the effective content area */
+          padding-left: 0;
+          padding-right: 0;
+          margin: 0; /* Reset margin from mobile */
+        }
+      }
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+
+      /* Ensuring the quote mark appears visually large and correctly positioned */
+      .testimonial-card {
+        position: relative;
+        overflow: hidden;
+      }
+      .quote-icon {
+        position: absolute;
+        top: 10px; /* Adjust position to partially hide it off-card top */
+        left: 0.5rem;
+        line-height: 1; /* Keep the line height tight */
+        font-size: 8rem; /* Make it large */
+        font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif; /* Use a serif font for the quote */
+        user-select: none;
+        z-index: 0;
+        opacity: 1; /* No transparency needed since color is muted */
+      }
+      .quote-text {
+        position: relative; /* Bring text above the quote icon */
+        z-index: 1;
+        font-size: 1rem;
+        padding-top: 40px;
+      }
+      /* Custom Styles for the large, dramatic quote icon */
+      .testimonial-card {
+        position: relative; /* Crucial for absolute positioning of the quote icon */
+        overflow: hidden; /* Ensures the large quote icon is clipped at the card boundary */
+        z-index: 10; /* Ensures the card content is above the background quote icon */
+        /* Add transition for scale/shadow for a smooth hover effect */
+        transition: all 0.3s ease-in-out;
+      }
+
+      /* Hover Effect: Scale up slightly and add a prominent shadow */
+      .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+      }
+      .author-line {
+        line-height: 1.25;
+      }
+      .author-line p {
+        font-weight: 900;
+      }
+      body,
+      html {
+        background: #f5f1e5;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+      }
+      .tiro-bangla-regular {
+        font-family: "Tiro Bangla", serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      * {
+        font-family: "Tiro Bangla", serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .no-select {
+        user-select: none;
+      }
+      #scrollContainer {
+        scroll-behavior: smooth;
+        user-select: none;
+        -webkit-user-drag: none;
+      }
+      .custom-cursor {
+        pointer-events: none; /* Crucial: allows clicking elements underneath */
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        transform: translate(
+          -50%,
+          -50%
+        ); /* Center the element on the mouse point */
+        transition: transform 0.1s ease-out,
+          width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+          height 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      /* Style for the smaller, primary dot */
+      .cursor-dot {
+        transition: transform 0.05s ease-out; /* Faster transition for the core dot */
+      }
+
+      /* Hover state for interactive elements */
+      .cursor-interact {
+        cursor: none; /* Ensure no default cursor appears on hover */
+      }
+
+      /* State when hovering over an interactive element */
+      .custom-cursor.active {
+        width: 50px;
+        height: 50px;
+        background-color: rgba(
+          16,
+          185,
+          129,
+          0.2
+        ); /* Emerald with transparency */
+        border-color: #10b981;
+      }
+
+      .cursor-dot.active {
+        transform: translate(-50%, -50%) scale(0); /* Hide the dot when active */
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="customCursor"
+      class="custom-cursor w-8 h-8 rounded-full border-2 border-primary bg-primary/20"
+    ></div>
+
+    <!-- 2. The Cursor Dot (Small Center Dot) -->
+    <div
+      id="cursorDot"
+      class="custom-cursor cursor-dot w-2 h-2 bg-primary rounded-full"
+    ></div>
+    <nav class="bg-[#f5f1e5] shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+          <!-- 1. Logo -->
+          <div class="flex-shrink-0 flex items-center">
+            <a href="#" class="flex items-center space-x-2">
+              <img src="main-logo.png" alt="" />
+            </a>
+          </div>
+
+          <!-- 2. Desktop Menu Links -->
+          <div class="hidden md:flex items-center space-x-2 lg:space-x-4">
+            <!-- Transition and full-rounded background hover effect for expert feel -->
+            <a
+              href="#aboutus"
+              class="text-dark-amber px-4 py-2 rounded-full text-base transition-all font-medium duration-500 hover:bg-dark-amber hover:text-white ease-in-out transform active:scale-95"
+              >আমাদের সম্পর্কে</a
+            >
+            <a
+              href="#stars"
+              class="text-dark-amber px-4 py-2 rounded-full text-base transition-all font-medium duration-500 hover:bg-dark-amber hover:text-white ease-in-out transform active:scale-95"
+              >আমাদের শিল্পীরা</a
+            >
+            <a
+              href="#gallery"
+              class="text-dark-amber px-4 py-2 rounded-full text-base transition-all font-medium duration-500 hover:bg-dark-amber hover:text-white ease-in-out transform active:scale-95"
+              >গ্যালারি</a
+            >
+            <a
+              href="https://wa.me/01400000000"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-dark-amber border-2 border-dark-amber px-4 py-2 rounded-full text-base font-semibold transition-all duration-500 hover:bg-dark-amber hover:text-white transform active:scale-95 shadow-md hover:shadow-lg"
+              >যোগাযোগ করুন</a
+            >
+          </div>
+
+          <!-- 3. Mobile Menu Button (Hamburger) -->
+          <div class="md:hidden flex items-center">
+            <button
+              id="mobile-menu-button"
+              class="inline-flex items-center justify-center p-2 rounded-full text-dark-amber hover:text-amber-900 hover:bg-amber-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-dark-amber transition duration-300"
+            >
+              <span class="sr-only">Open main menu</span>
+              <!-- Hamburger Icon -->
+              <svg
+                id="hamburger-icon"
+                class="block h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+              <!-- Close Icon (hidden by default) -->
+              <svg
+                id="close-icon"
+                class="hidden h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Mobile Menu (Dropdown - Enhanced Hover/Active) -->
+      <div
+        id="mobile-menu"
+        class="md:hidden hidden bg-cream border-t border-amber-200"
+      >
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <!-- Enhanced mobile link hover: using a more noticeable background change and transition -->
+          <a
+            href="#aboutus"
+            class="text-dark-amber block px-3 py-2 rounded-lg text-base font-medium transition-colors duration-300 active:text-amber-900"
+            >আমাদের সম্পর্কে</a
+          >
+          <a
+            href="#stars"
+            class="text-dark-amber block px-3 py-2 rounded-lg text-base font-medium transition-colors duration-300 active:text-amber-900"
+            >আমাদের শিল্পীরা</a
+          >
+          <a
+            href="#gallery"
+            class="text-dark-amber block px-3 py-2 rounded-lg text-base font-medium transition-colors duration-300 active:text-amber-900"
+            >গ্যালারি</a
+          >
+          <a
+            href="https://wa.me/01400000000"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-white bg-dark-amber hover:bg-amber-900 block px-3 py-2 mt-2 rounded-lg text-base font-semibold transition-colors duration-300 text-center"
+            >যোগাযোগ</a
+          >
+        </div>
+      </div>
+    </nav>
+    <div class="xl:px-[200px]">
+      <div
+        class="w-full h-auto p-10 bg-[url('banner-bg.png')] bg-no-repeat bg-contain bg-center"
+      >
+        <main
+          class="relative w-full max-w-5xl mx-auto aspect-[4/3] md:aspect-[2/1]"
+        >
+          <!-- Central Text Block -->
+          <!-- Positioned in the center, on top (z-10) -->
+          <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-3/4 md:w-auto"
+          >
+            <div class="relative text-center">
+              <!-- 
+                    Brush Stroke Effect:
+                    - A div behind the text (z-[-1]).
+                    - Styled with a gradient and transform to look like a brush stroke.
+                  -->
+              <div
+                class="absolute inset-0 -inset-x-4 md:-inset-x-8 -inset-y-4 md:-inset-y-8 opacity-70 transform -rotate-3 skew-x-[-10deg] z-[-1] rounded-lg"
+              ></div>
+
+              <!-- 
+                    Main Heading:
+                    - Responsive text size (text-3xl sm:text-4xl md:text-6xl).
+                    - Using <span> blocks for line breaks, matching the image.
+                  -->
+              <h1
+                class="text-xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-black whitespace-nowrap"
+              >
+                সুরের জাদুতে
+                <span class="block mt-2 md:mt-4 font-bold"
+                  >আপনার অনুষ্ঠানে</span
+                >
+                <span class="block mt-2 md:mt-4 font-bold">প্রাণের ছোয়া</span>
+              </h1>
+            </div>
+          </div>
+
+          <!-- 
+            Images:
+            - Each image is absolutely positioned relative to the 'main' container.
+            - Sizing (w-1/4 md:w-1/6) is relative to the parent, making it responsive.
+            - 'transform' is used for the tilted effect.
+            - Added 'transition-transform hover:scale-105' for a simple hover effect.
+          -->
+
+          <!-- Image 1 (Top-Left) -->
+          <div
+            class="absolute top-4 left-4 w-1/4 md:w-1/6 transform -rotate-6 transition-transform hover:scale-105"
+          >
+            <img
+              src="banner-1.png"
+              alt="Musicians"
+              class="rounded-lg shadow-lg w-full h-full object-cover"
+              onerror="this.src='https://placehold.co/300x200/6B7280/FFFFFF?text=Image+Error'"
+            />
+          </div>
+
+          <!-- Image 2 (Mid-Left) -->
+          <div
+            class="absolute top-1/2 -translate-y-1/2 left-2 md:left-10 w-1/4 md:w-1/6 transform rotate-3 transition-transform hover:scale-105"
+          >
+            <img
+              src="banner-2.png"
+              alt="Sitar Player"
+              class="rounded-lg shadow-lg w-full h-full object-cover"
+              onerror="this.src='https://placehold.co/300x200/9A3412/FFFFFF?text=Image+Error'"
+            />
+          </div>
+
+          <!-- Image 3 (Bottom-Left) -->
+          <div
+            class="absolute bottom-4 left-4 w-1/4 md:w-1/6 transform -rotate-3 transition-transform hover:scale-105"
+          >
+            <img
+              src="banner-3.png"
+              alt="Dhol Player"
+              class="rounded-lg shadow-lg w-full h-full object-cover"
+              onerror="this.src='https://placehold.co/300x200/1E40AF/FFFFFF?text=Image+Error'"
+            />
+          </div>
+
+          <!-- Image 4 (Top-Right) -->
+          <div
+            class="absolute top-4 right-4 w-1/4 md:w-1/6 transform rotate-6 transition-transform hover:scale-105"
+          >
+            <img
+              src="banner-4.png"
+              alt="Guitarist"
+              class="rounded-lg shadow-lg w-full h-full object-cover"
+              onerror="this.src='https://placehold.co/300x200/047857/FFFFFF?text=Image+Error'"
+            />
+          </div>
+
+          <!-- Image 5 (Mid-Right) -->
+          <div
+            class="absolute top-1/2 -translate-y-1/2 right-2 md:right-10 w-1/4 md:w-1/6 transform -rotate-3 transition-transform hover:scale-105"
+          >
+            <img
+              src="banner-5.png"
+              alt="Singers"
+              class="rounded-lg shadow-lg w-full h-full object-cover"
+              onerror="this.src='https://placehold.co/300x200/7E22CE/FFFFFF?text=Image+Error'"
+            />
+          </div>
+
+          <!-- Image 6 (Bottom-Right) -->
+          <div
+            class="absolute bottom-4 right-4 w-1/4 md:w-1/6 transform rotate-3 transition-transform hover:scale-105"
+          >
+            <img
+              src="banner-6.png"
+              alt="Band Group"
+              class="rounded-lg shadow-lg w-full h-full object-cover"
+              onerror="this.src='https://placehold.co/300x200/BE123C/FFFFFF?text=Image+Error'"
+            />
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="aboutus" class="w-full max-w-5xl mx-auto px-4 py-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div class="img w-full border-4 border-white p-2">
+          <img src="about-us.png" alt="" class="w-full mx-auto mb-5 md:mb-0" />
+        </div>
+        <div class="content my-auto">
+          <div class="heading">
+            <h2 class="text-3xl mb-2">আমাদের গল্প</h2>
+            <p>
+              তারার মেলা শিল্পী সংঘ হলো একদল সঙ্গীত প্রেমী শিল্পীর সংগঠন, যারা
+              সুরের মাধ্য মে আনন্দ ছড়িয়ে দিতে বিশ্বাসী। আধুনিক গান থেকে শুরু করে
+              লোকজ সুর — আমরা পরিবেশন করি এমন সঙ্গীত যা ছুঁয়ে যায় শ্রোতার মন
+              <br /><br />
+              আমাদের দল বাংলাদেশের বিভিন্ন প্রা ন্তে এবং দেশের বাইরে অসংখ্য
+              অনুষ্ঠানে পারফর্ম করেছে। আমরা প্রতিটি অনুষ্ঠানে নিয়ে আসি
+              পেশাদারিত্ব, আবেগ এবং সঙ্গীতের প্রাণ।
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 pt-10 md:pt-20">
+      <!-- Section Title: "আমাদের সেবা:" -->
+      <h1 class="text-3xl md:text-4xl font-semibold text-gray-900 mb-8">
+        আমাদের সেবা:
+      </h1>
+
+      <!-- Services Grid Container -->
+      <div
+        class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-6 md:gap-8"
+      >
+        <!-- Card Data Definition and Rendering Script -->
+        <script>
+          const customCursor = document.getElementById("customCursor");
+          const cursorDot = document.getElementById("cursorDot");
+          const interactiveElements =
+            document.querySelectorAll(".cursor-interact");
+
+          // Configuration for smooth follow and interaction
+          let mouseX = 0,
+            mouseY = 0;
+          let ringX = 0,
+            ringY = 0;
+          const speed = 0.2; // Smoothness factor for the ring
+
+          // --- 1. Follow Logic (Smooth Animation) ---
+          function animateCursor() {
+            // Update the dot position instantly (or with minimal transition)
+            cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+
+            // Calculate the ring's position using linear interpolation (lerping) for smoothness
+            ringX += (mouseX - ringX) * speed;
+            ringY += (mouseY - ringY) * speed;
+
+            // Apply the smoothed position to the ring
+            customCursor.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+
+            // Request the next frame
+            requestAnimationFrame(animateCursor);
+          }
+
+          // Start the animation loop
+          animateCursor();
+
+          // --- 2. Mouse Tracking ---
+          document.addEventListener("mousemove", (e) => {
+            // Store the raw mouse coordinates
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+          });
+
+          // --- 3. Interaction Logic (Grow/Change Cursor on Hover) ---
+
+          // Function to set the cursor to 'active' state
+          const activateCursor = () => {
+            customCursor.classList.add("active");
+            cursorDot.classList.add("active");
+          };
+
+          // Function to reset the cursor to 'default' state
+          const deactivateCursor = () => {
+            customCursor.classList.remove("active");
+            cursorDot.classList.remove("active");
+          };
+
+          // Attach event listeners to all interactive elements
+          interactiveElements.forEach((element) => {
+            element.addEventListener("mouseenter", activateCursor);
+            element.addEventListener("mouseleave", deactivateCursor);
+          });
+
+          // Optional: Hide cursor when leaving the window
+          document.body.addEventListener("mouseleave", () => {
+            customCursor.style.opacity = 0;
+            cursorDot.style.opacity = 0;
+          });
+
+          document.body.addEventListener("mouseenter", () => {
+            customCursor.style.opacity = 1;
+            cursorDot.style.opacity = 1;
+          });
+
+          // Optional: Ensure the initial state is hidden or centered
+          window.onload = () => {
+            // Initial positioning can be set here if needed, but the mousemove will override it quickly
+          };
+          // Define the service data array with Bengali titles, expressive emojis, and color codes
+          const services = [
+            {
+              title: "লাইভ ব্যান্ড পারফরমেন্স",
+              iconimg: "service-1.png", // Microphone, Guitar, Drums
+
+              iconColor: "text-red-700",
+            },
+            {
+              title: "একক ও দলীয় গান পরিবেশন",
+              iconimg: "service-2.png", // Music notes, Microphone
+
+              iconColor: "text-purple-700",
+            },
+            {
+              title: "সাংস্কৃতিক ও লোকজ অনুষ্ঠান",
+              iconimg: "service-3.png", // Theater mask, Scroll, Fiddle
+
+              iconColor: "text-blue-700",
+            },
+            {
+              title: "সাউন্ড ও স্টেজ সাপোর্ট",
+              iconimg: "service-4.png", // Speaker, Structure, Light bulb
+
+              iconColor: "text-amber-700",
+            },
+          ];
+
+          // Function to generate the HTML string for a single service card
+          function createServiceCard(service) {
+            return `
+                        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 transform hover:scale-[1.02] flex flex-col items-center text-center h-full border border-gray-100">
+                            <!-- Icon/Image Placeholder Area -->
+                            <div class="w-32 h-32 flex items-center justify-center mb-6 rounded-full ${service.iconBg} p-2">
+                                <img src="${service.iconimg}" alt="${service.title}" class="w-full h-full object-contain" onerror="this.style.display='none'; this.parentNode.innerHTML='${service.iconimg}'; this.parentNode.classList.add('${service.iconColor}', 'text-4xl');" />
+                            </div>
+                            
+                            <!-- Title -->
+                            <h2 class="text-sm lg:text-xl font-bold text-gray-800 leading-snug">
+                                ${service.title}
+                            </h2>
+                        </div>
+                    `;
+          }
+
+          // Render the cards on page load
+          document.addEventListener("DOMContentLoaded", () => {
+            const gridContainer = document.getElementById("services-grid");
+            if (gridContainer) {
+              // Map the service data to HTML strings and join them
+              gridContainer.innerHTML = services
+                .map(createServiceCard)
+                .join("");
+            }
+          });
+        </script>
+
+        <div id="services-grid" class="contents">
+          <!-- Service Cards will be injected here by the JavaScript above -->
+        </div>
+      </div>
+    </div>
+    <!-- swiper -->
+    <div id="stars" class="w-full max-w-7xl mx-auto px-4 pt-20">
+      <h1 class="text-3xl md:text-4xl font-semibold text-gray-900">
+        আমাদের শিল্পীরা
+      </h1>
+    </div>
+    <div
+      class="absolute left-4 xl:left-auto xl:right-0 w-[calc(100vw-((100vw-80rem)/2))] py-5"
+    >
+      <div
+        class="swiper mySwiper select-none cursor-grab active:cursor-grabbing"
+      >
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <div
+              class="bg-white h-auto max-w-[270px] py-4"
+              onclick="openPopup('মিজান মাহমুদ রাজিব', 'আধুনিক গানের শিল্পী', '“গান কেবল বিনোদন নয়, এটি অনুভূতির সেতুবন্ধন।” আধুনিক গানের ধারায় মিজান মাহমুদ রাজিব এক উজ্জ্বল নাম। তাঁর কণ্ঠে ফুটে ওঠে প্রেম, প্রকৃতি ও জীবনের নানা রঙ। তাঁর গাওয়া গান গুলো শুধু শ্রোতার মন জয় করেনা, বরং হৃদয়ে ছুঁয়ে যায় এক নরম সুরে— যেন তিনি গাইছেন ভালোবাসার ভাষায় জীবনেরগল্প।')"
+            >
+              <img
+                src="shilpi-1.png"
+                class="mx-auto h-[80%] object-cover rounded-xl"
+                alt=""
+              />
+              <p class="text-center text-md lg:text-2xl font-bold">
+                মিজান মাহমুদ রাজিব
+              </p>
+              <p class="text-center text-sm lg:text-md">আধুনিক গানের শিল্পী</p>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="bg-white h-auto max-w-[270px] w-full py-4"
+              onclick="openPopup('ইসরাত জাহান জুই', 'ফোক সংগীতের প্রাণ', '“ফোক সংগীত মানেই শেকড়ের টান, মাটির গন্ধ আর মানুষের হাসি-কান্না।” ইসরাত জাহান জুই ফোক সংগীতে নিয়ে এসেছেন এক নতুন প্রাণচাঞ্চল্য। তাঁর গানে আছে নদীর ঢেউ, মাঠের গন্ধ, আর বাংলার মাটির সহজ সৌন্দর্য। তাঁর কণ্ঠে ফোক গান হয়ে ওঠে ভালোবাসা ও ঐতিহ্যের এক জীবন্তগল্প। ')"
+            >
+              <img
+                src="shilpi-1.png"
+                class="mx-auto h-[80%] object-cover rounded-xl"
+                alt=""
+              />
+              <p class="text-center text-md lg:text-2xl font-bold">
+                ইসরাত জাহান জুই
+              </p>
+              <p class="text-center text-sm lg:text-md">ফোক সংগীতের প্রাণ</p>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="bg-white h-auto max-w-[270px] w-full py-4"
+              onclick="openPopup('শেফালী সরকার', 'বাউল সংগীতের সাধনা','“মনুষ্যত্বই বাউল গানের আসল সাধনা।” শেফালী সরকার বাউল গানে খুঁজে পান মুক্তিরপথ। লালন, হাছন, রাধা রমণের সুর তাঁর কণ্ঠে পায় নতুন রূপ, নতুন অনুভব। তাঁর গানে আছে সত্য, ভালোবাসা ও মানুষকে জানার অদম্য তৃষ্ণা। তিনি বাউল দর্শনের এক জাগ্রতপ্রতীক।')"
+            >
+              <img
+                src="shilpi-1.png"
+                class="mx-auto h-[80%] object-cover rounded-xl"
+                alt=""
+              />
+              <p class="text-center text-md lg:text-2xl font-bold">
+                শেফালী সরকার
+              </p>
+              <p class="text-center text-sm lg:text-md">বাউল সংগীতের সাধনা</p>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div
+              class="bg-white h-auto max-w-[270px] w-full py-4"
+              onclick="openPopup('সোহরাব', 'গিটারিস্ট','“তার ছোঁয়ায় জীবন্ত হয় সুরের নীরবতা।” সোহরাবের গিটার বাজনা যেন আত্মার প্রতিধ্বনি। তিনি সুরকে রূপ দেন এমন এক ছন্দে, যা শ্রোতার মনের ভেতর ঢেউ তোলে। তাঁর গিটার সুরে আধুনিক সংগীত পায় নতুন প্রাণ।')"
+            >
+              <img
+                src="shilpi-1.png"
+                class="mx-auto h-[80%] object-cover rounded-xl"
+                alt=""
+              />
+              <p class="text-center text-md lg:text-2xl font-bold">সোহরাব</p>
+              <p class="text-center text-sm lg:text-md">গিটারিস্ট</p>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="bg-white h-auto max-w-[270px] w-full py-4"
+              onclick="openPopup('মো: রিয়াদ সিকদার', 'গিটারিস্ট','“প্রতিটি নোটেই মিশে থাকে ছন্দ আর হৃদয়ের উষ্ণতা।” রিয়াদ সিকদারের গিটার বাজনা আধুনিক সংগীতকে দিয়েছে নতুন মাত্রা। তাঁর হাতে সুর গুলো রঙ বদলায়, কখনও নরম, কখনও ঝড়ের মতো তেজি। তিনি সংগীতকে শুধু শুনিয়ে যাননা, অনুভব করান।')"
+            >
+              <img
+                src="shilpi-1.png"
+                class="mx-auto h-[80%] object-cover rounded-xl"
+                alt=""
+              />
+              <p class="text-center text-md lg:text-2xl font-bold">
+                মো: রিয়াদ সিকদার
+              </p>
+              <p class="text-center text-sm lg:text-md">গিটারিস্ট</p>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="bg-white h-auto max-w-[270px] w-full py-4"
+              onclick="openPopup('মো: জাকারিয়া হোসেন অন্তর', 'বাঁশি বাদক','“বাঁশির সুরেই প্রকৃতি কথা বলে।” অন্তরের বাঁশিতে সুর নয়, বরং কথা বলে জীবন। তাঁর বাজনায় মিশে থাকে গ্রামীণ নির্জন দুপুর, নদীর স্রোত, আর প্রকৃতির নরম মায়া। তিনি বাঁশির সুরে মানুষের মনে শান্তি ছড়িয়ে দেন।')"
+            >
+              <img
+                src="shilpi-1.png"
+                class="mx-auto h-[80%] object-cover rounded-xl"
+                alt=""
+              />
+              <p class="text-center text-md lg:text-xl font-bold">
+                মো: জাকারিয়া হোসেন অন্তর
+              </p>
+              <p class="text-center text-sm lg:text-md">বাঁশি বাদক</p>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="bg-white h-auto max-w-[270px] w-full py-4"
+              onclick="openPopup('বিল্লাল হোসাইন', 'মন্দিরা বাদক','“লোক সঙ্গীতের প্রাণস্পন্দন লুকিয়ে আছে মন্দিরার ছন্দে।” বিল্লাল হোসাইন তাঁর মন্দিরা বাজনায় ফোক সংগীতকে জীবন্ত করে তোলেন। তাঁর ছন্দে আছে মাটির গন্ধ, গ্রামীণ  উচ্ছ্বাসও আনন্দের ধ্বনি। তিনি দলের প্রতিটি পরিবেশনায় আনেন এক অপরিহার্য ছন্দের শক্তি।')"
+            >
+              <img
+                src="shilpi-1.png"
+                class="mx-auto h-[80%] object-cover rounded-xl"
+                alt=""
+              />
+              <p class="text-center text-md lg:text-xl font-bold">
+                বিল্লাল হোসাইন
+              </p>
+              <p class="text-center text-sm lg:text-md">মন্দিরা বাদক</p>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="bg-white h-auto max-w-[270px] w-full py-4"
+              onclick="openPopup('সাইয়াদ আয়াজ আহমেদ', 'সাউন্ড ইঞ্জিনিয়ার','“নেপথ্যে থেকেও তিনি ইসংগীতের প্রাণ স্বরূপ।” আয়াজ আহমেদ প্রযুক্তির মাধ্যমে সুরে প্রাণ দেন। তিনি জানেন, সঠিক সাউন্ড ব্যালান্সই একটিপরিবেশনাকে করে তোলে নিখুঁতও পেশাদার। তাঁর দক্ষতাই সংগঠনের প্রতিটি অনুষ্ঠানে এনে দেয় নতুন শ্রুতি মাধুর্য।')"
+            >
+              <img
+                src="shilpi-1.png"
+                class="mx-auto h-[80%] object-cover rounded-xl"
+                alt=""
+              />
+              <p class="text-center text-md lg:text-xl font-bold">
+                সাইয়াদ আয়াজ আহমেদ
+              </p>
+              <p class="text-center text-sm lg:text-md">সাউন্ড ইঞ্জিনিয়ার</p>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="bg-white h-auto max-w-[270px] w-full py-4"
+              onclick="openPopup('ফারিয়া আহাম্মদ তানজিনা', 'উপস্থাপিকা','“উপস্থাপনা মানে শুধু বলা নয়, অনুভূতির সেতু বন্ধন গড়ে তোলা।” তানজিনা তাঁর আত্মবিশ্বাসী কণ্ঠ ও সুশৃঙ্খল উপস্থাপনায় অনুষ্ঠানকে প্রাণবন্ত করে তোলেন। তিনি জানেন কীভাবে দর্শক ও শিল্পীর মধ্যে এক উষ্ণ যোগাযোগ স্থাপন করতে হয়। তাঁর কণ্ঠে প্রতিটি অনুষ্ঠান পায় এক নতুন মাত্রা।')"
+            >
+              <img
+                src="shilpi-1.png"
+                class="mx-auto h-[80%] object-cover rounded-xl"
+                alt=""
+              />
+              <p class="text-center text-md lg:text-xl font-bold">
+                ফারিয়া আহাম্মদ তানজিনা
+              </p>
+              <p class="text-center text-sm lg:text-md">উপস্থাপিকা</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="artistPopup"
+      class="fixed top-0 left-0 inset-0 w-full h-screen bg-black/80 hidden items-center justify-center z-50"
+    >
+      <div
+        class="bg-white fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-lg w-[90%] md:w-full mx-auto p-8 rounded-3xl shadow-custom transform transition-all scale-90 opacity-0 duration-300 z-50 focus:outline-none"
+        id="popupContent"
+        tabindex="-1"
+      >
+        <!-- 'X' Close Button (UX Standard) -->
+        <button
+          onclick="closePopup()"
+          class="close-btn absolute top-4 right-4 text-gray-400 p-2 rounded-full hover:bg-gray-50 transition duration-150"
+          aria-label="Close modal"
+        >
+          <!-- Lucide X icon using inline SVG for compliance -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="w-5 h-5"
+          >
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
+
+        <!-- Profile/Avatar Section -->
+        <div class="flex flex-col items-center mb-6">
+          <h2
+            id="popupName"
+            class="text-3xl font-extrabold text-gray-800 text-center"
+          ></h2>
+          <p
+            id="popupRole"
+            class="text-sm font-medium text-blue-600 text-center mb-3 tracking-wider uppercase"
+          ></p>
+
+          <!-- Subtle Separator Line -->
+          <div class="w-16 h-1 bg-gray-100 rounded-full"></div>
+        </div>
+
+        <!-- Description Content -->
+        <p
+          id="popupDescription"
+          class="text-gray-700 text-base leading-relaxed text-center mb-6 px-2 sm:px-4"
+        >
+          <!-- Content will be injected by JavaScript -->
+        </p>
+
+        <!-- Action Button -->
+        <div class="text-center">
+          <button
+            onclick="closePopup()"
+            class="w-full sm:max-w-[280px] bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold tracking-wide py-3 px-6 rounded-xl hover:from-red-700 hover:to-red-800 transition duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+          >
+            বন্ধ করুন
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="gallery" class="mx-auto py-12 mt-[310px] lg:mt-[400px]">
+      <!-- Header Content -->
+      <header class="text-center mb-12 px-4">
+        <h1 class="text-3xl md:text-4xl font-extrabold mb-2 text-gray-800">
+          গ্যালারি / পারফর্মেন্স
+        </h1>
+        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+          দেখে নিন আমাদের বিভিন্ন অনুষ্ঠান, কনসার্ট ও রিহার্সালের ঝলক প্রতিটি
+          ছবিতে আছে সুর, আনন্দ ও ভালোবাসার গল্প
+        </p>
+      </header>
+
+      <!-- Custom Slider Viewport -->
+      <div class="slider-viewport relative">
+        <div class="slider-wrapper" id="slider-wrapper">
+          <!-- Slide 1: Main Event -->
+          <div class="slider-item" data-index="0">
+            <img
+              src="gallery.png"
+              alt="Main performance on stage"
+              class="w-full object-contain"
+            />
+          </div>
+
+          <!-- Slide 2: Rehearsal -->
+          <div class="slider-item" data-index="1">
+            <img
+              src="gallery.png"
+              alt="Artists preparing for an event"
+              class="w-full object-contain"
+            />
+          </div>
+
+          <!-- Slide 3: Dancers -->
+          <div class="slider-item" data-index="2">
+            <img
+              src="gallery.png"
+              alt="Group of dancers performing"
+              class="w-full object-contain"
+            />
+          </div>
+
+          <!-- Slide 4: Music -->
+          <div class="slider-item" data-index="3">
+            <img
+              src="gallery.png"
+              alt="Musicians playing instruments"
+              class="w-full object-contain"
+            />
+          </div>
+
+          <!-- Slide 5: Portrait -->
+          <div class="slider-item" data-index="4">
+            <img
+              src="gallery.png"
+              alt="Artist portrait photo"
+              class="w-full object-contain"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Navigation Buttons -->
+      <div class="flex justify-center mt-12 space-x-6">
+        <button
+          id="prev-btn"
+          class="custom-nav-btn"
+          aria-label="Previous Slide"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
+          </svg>
+        </button>
+        <button id="next-btn" class="custom-nav-btn" aria-label="Next Slide">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M14 5l7 7m0 0l-7 7m7-7H3"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="text-center">
+      <h1
+        class="text-xl lg:text-3xl md:text-4xl font-semibold text-gray-900 mt-10"
+      >
+        আমাদের সম্পর্কে যাঁরা বলেছেন
+      </h1>
+    </div>
+    <div class="max-w-5xl mx-auto my-[3rem] px-4">
+      <!-- Testimonials Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Card 1 -->
+        <div
+          class="testimonial-card bg-white p-6 md:p-8 rounded-lg shadow-sm border border-gray-100 flex flex-col justify-between"
+        >
+          <span class="quote-icon text-quote-gold">“</span>
+          <p class="quote-text text-base leading-relaxed mb-6">
+            "তাদের পরিবেশনা আমাদের বিয়ের অনুষ্ঠানে একেবারে অন্যরকম আমেজ এনে
+            দিয়েছিল সবাই মুগ্ধ!"
+          </p>
+          <div class="author-line text-sm pt-4 border-t border-gray-100">
+            <p class="text-gray-500">— সাবরিনা ইসলাম, ঢাকা</p>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div
+          class="testimonial-card bg-white p-6 md:p-8 rounded-lg shadow-sm border border-gray-100 flex flex-col justify-between"
+        >
+          <span class="quote-icon text-quote-gold">“</span>
+          <p class="quote-text text-base leading-relaxed mb-6">
+            "কর্পোরেট দিনের তারার মেলা ব্যান্ড পারফর্ম করেছিল — পেশাদারিত্ব ও
+            সাউন্ড কোয়ালিটি অসাধারণ!"
+          </p>
+          <div class="author-line text-sm pt-4 border-t border-gray-100">
+            <p class="text-gray-500">— মোহাম্মদ তানভীর আহমেদ, গাজীপুর</p>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div
+          class="testimonial-card bg-white p-6 md:p-8 rounded-lg shadow-sm border border-gray-100 flex flex-col justify-between"
+        >
+          <span class="quote-icon text-quote-gold">“</span>
+          <p class="quote-text text-base leading-relaxed mb-6">
+            "আমাদের কলেজ রিইউনিয়নে তাদের পারফর্মেন্স ছিল সবচেয়ে আনন্দের মুহূর্ত
+            একদম পারফেক্ট!"
+          </p>
+          <div class="author-line text-sm pt-4 border-t border-gray-100">
+            <p class="text-gray-500">— নাদিয়া রহমান, চট্টগ্রাম</p>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div
+          class="testimonial-card bg-white p-6 md:p-8 rounded-lg shadow-sm border border-gray-100 flex flex-col justify-between"
+        >
+          <span class="quote-icon text-quote-gold">“</span>
+          <p class="quote-text text-base leading-relaxed mb-6">
+            "লোকজ গানগুলোর উপস্থাপনা এত সুন্দর ছিল যে সবাই নাচতে বাধ্য হলো!
+            সত্যিই প্রাণবন্ত দল"
+          </p>
+          <div class="author-line text-sm pt-4 border-t border-gray-100">
+            <p class="text-gray-500">— রিফাউল ইসলাম, কুমিল্লা</p>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div
+          class="testimonial-card bg-white p-6 md:p-8 rounded-lg shadow-sm border border-gray-100 flex flex-col justify-between"
+        >
+          <span class="quote-icon text-quote-gold">“</span>
+          <p class="quote-text text-base leading-relaxed mb-6">
+            "তাদের নারী কণ্ঠশিল্পী গলা অসাধারণ! মন ছুঁয়ে যায় ভবিষ্যতে আবার বুক
+            করব ইনশাআল্লাহ।"
+          </p>
+          <div class="author-line text-sm pt-4 border-t border-gray-100">
+            <p class="text-gray-500">— শামীমা নাসরিন, নারায়ণগঞ্জ</p>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div
+          class="testimonial-card bg-white p-6 md:p-8 rounded-lg shadow-sm border border-gray-100 flex flex-col justify-between"
+        >
+          <span class="quote-icon text-quote-gold">“</span>
+          <p class="quote-text text-base leading-relaxed mb-6">
+            "স্টেজ পারফর্মেন্স, আলো আর সাউন্ড সবকিছুই একদম নিখুঁত ছিল খুবই
+            পেশাদার দল।"
+          </p>
+          <div class="author-line text-sm pt-4 border-t border-gray-100">
+            <p class="text-gray-500">— আবির হাসান, রাজশাহী</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-footer-main text-gray-300 pt-16 shadow-2xl">
+      <div class="container mx-auto py-8 px-6 lg:px-12">
+        <!-- Grid Layout: 4 columns on medium/large screens, stacking on mobile -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-16">
+          <!-- Column 1: Logo & Mission Statement -->
+          <div class="md:col-span-2 space-y-4">
+            <!-- Logo Block: Use SVG for scalability and an accent color -->
+            <div class="flex items-center space-x-3">
+              <!-- Custom SVG Star Icon -->
+              <div class="text-center font-serif leading-none">
+                <!-- Main Logo Text -->
+                <img src="footerlogo.png" alt="" class="h-[60px]" />
+              </div>
+            </div>
+            <p class="text-white text-sm max-w-md">
+              আমাদের লক্ষ্য হলো বাংলা শিল্পের শ্রেষ্ঠ প্রতিভাদের খুঁজে বের করা
+              এবং তাদের বিশ্ব মঞ্চে তুলে ধরা। সংস্কৃতি ও ঐতিহ্যের প্রতি আমাদের
+              দৃঢ় অঙ্গীকার।
+            </p>
+          </div>
+
+          <!-- Column 2: Quick Links (The original navigation) -->
+          <div>
+            <h4
+              class="text-xl font-normal mb-4 text-white border-b border-gray-700 pb-2"
+            >
+              গুরুত্বপূর্ণ লিঙ্ক
+            </h4>
+            <nav class="flex flex-col text-white space-y-3 text-sm">
+              <a
+                href="#aboutus"
+                class="hover:text-gray-900 transition duration-500 ease-in-out"
+                >আমাদের সম্পর্কে</a
+              >
+              <a
+                href="#stars"
+                class="hover:text-gray-900 transition duration-500 ease-in-out"
+                >আমাদের শিল্পীরা</a
+              >
+              <a
+                href="#gallery"
+                class="hover:text-gray-900 transition duration-500 ease-in-out"
+                >গ্যালারি</a
+              >
+              <a
+                href="https://wa.me/01400000000"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:text-gray-900 transition duration-500 ease-in-out"
+                >যোগাযোগ</a
+              >
+            </nav>
+          </div>
+
+          <!-- Column 3: Contact & Social Media -->
+          <div>
+            <h4
+              class="text-xl font-normal mb-4 text-white border-b border-gray-700 pb-2"
+            >
+              আমাদের সাথে যুক্ত হন
+            </h4>
+            <div class="flex space-x-4 text-gray-400">
+              <!-- Social Icons (Now using Font Awesome 6.5.2) -->
+              <a
+                href="#"
+                class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-teal-400 hover:text-slate-900 transition duration-300 ease-in-out"
+                aria-label="Facebook"
+              >
+                <i class="fa-brands fa-facebook-f text-xl"></i>
+              </a>
+              <a
+                href="https://wa.me/01400000000"
+                class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-teal-400 hover:text-slate-900 transition duration-300 ease-in-out"
+                aria-label="WhatsApp"
+              >
+                <i class="fa-brands fa-whatsapp text-xl"></i>
+              </a>
+              <a
+                href="#"
+                class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-teal-400 hover:text-slate-900 transition duration-300 ease-in-out"
+                aria-label="Instagram"
+              >
+                <i class="fa-brands fa-instagram text-xl"></i>
+              </a>
+            </div>
+
+            <div class="mt-6 space-y-1 text-white">
+              <p class="text-sm">
+                Email:
+                <a
+                  href="mailto:info@shilpajogot.com"
+                  class="hover:text-teal-400"
+                  >info@shilpajogot.com</a
+                >
+              </p>
+              <p class="text-sm">
+                Phone: <span class="text-white">0140-000-0000</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Section: Copyright Bar (Updated background and border for better contrast) -->
+      <div
+        class="bg-footer-dark py-4 mt-12 text-sm text-center text-gray-400 border-t border-gray-700"
+      >
+        &copy; 2025 All Rights Reserved by 07Care | Powered by ETA07
+      </div>
+    </footer>
+    <!-- জাভাস্ক্রিপ্ট -->
+    <script>
+      // মেনু বাটন এবং মোবাইল মেনু সিলেক্ট করা
+      const menuButton = document.getElementById("mobile-menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const hamburgerIcon = document.getElementById("hamburger-icon");
+      const closeIcon = document.getElementById("close-icon");
+
+      // বাটনে ক্লিক ইভেন্ট যোগ করা
+      menuButton.addEventListener("click", () => {
+        // 'hidden' ক্লাস টগল করা
+        mobileMenu.classList.toggle("hidden");
+        // আইকন টগল করা
+        hamburgerIcon.classList.toggle("hidden");
+        closeIcon.classList.toggle("hidden");
+      });
+      const swiper = new Swiper(".mySwiper", {
+        slidesPerView: "auto",
+        spaceBetween: 20,
+        grabCursor: true,
+        freeMode: true,
+        mousewheel: {
+          forceToAxis: true,
+        },
+        breakpoints: {
+          0: {
+            slidesPerView: 3.5,
+            spaceBetween: 10, // 👈 smaller gap on mobile
+          },
+          768: {
+            slidesPerView: 4,
+            spaceBetween: 16,
+          },
+          1024: {
+            slidesPerView: 5,
+            spaceBetween: 20,
+          },
+        },
+      });
+      const popup = document.getElementById("artistPopup");
+      const popupContent = document.getElementById("popupContent");
+
+      function openPopup(name, role, description) {
+        document.getElementById("popupName").innerText = name;
+        document.getElementById("popupRole").innerText = role;
+        document.getElementById("popupDescription").innerText = description;
+
+        popup.classList.remove("hidden");
+        setTimeout(() => {
+          popupContent.classList.remove("scale-90", "opacity-0");
+          popupContent.classList.add("scale-100", "opacity-100");
+        }, 10);
+      }
+
+      function closePopup() {
+        popupContent.classList.add("scale-90", "opacity-0");
+        popupContent.classList.remove("scale-100", "opacity-100");
+        setTimeout(() => {
+          popup.classList.add("hidden");
+        }, 200);
+      }
+
+      // Optional: Close when clicking outside
+      popup.addEventListener("click", (e) => {
+        if (e.target === popup) closePopup();
+      });
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "quote-gold":
+                "#E0DCC4" /* Custom color to match the subtle beige/gold quote mark */,
+              "bg-light": "#F5F5F5" /* Very light grey/cream background */,
+              "text-dark": "#333333",
+              "footer-main": "#A56727",
+              "footer-dark": "#281A0F",
+              "footer-text": "#F5E6CC",
+              "dark-amber": "#78350f",
+              cream: "#f5f1e5",
+              primary: "#78350f", // Emerald 500
+              secondary: "#374151",
+            },
+            fontFamily: {
+              sans: ["Inter", "Noto Sans Bengali", "sans-serif"],
+            },
+          },
+        },
+      };
+      document.addEventListener("DOMContentLoaded", () => {
+        const wrapper = document.getElementById("slider-wrapper");
+        const slides = document.querySelectorAll(".slider-item");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
+        let currentIndex = 1;
+        const slideCount = slides.length;
+
+        // Define breakpoints for responsiveness
+        const MD_BREAKPOINT = 768; // Tailwind's 'md' breakpoint
+
+        /**
+         * Calculates the required horizontal translation for the slider wrapper
+         * to center the current slide based on screen size and desired layout.
+         */
+        const updateSliderPosition = () => {
+          if (slideCount === 0) return;
+
+          const viewportWidth = wrapper.parentElement.offsetWidth;
+          let translateX = 0;
+
+          // Remove active class from all first, then add to current
+          slides.forEach((slide) => slide.classList.remove("active-slide"));
+          slides[currentIndex].classList.add("active-slide");
+
+          if (window.innerWidth >= MD_BREAKPOINT) {
+            // --- Desktop / Tablet Layout: Center slide is larger ---
+
+            // Define widths and gap as CSS variables for easier use and consistency
+            // These should match your CSS media queries for side/main slide widths
+            // For calculation, we'll use fixed pixel values or percentages.
+            const mainSlideWidth = Math.min(window.innerWidth * 0.5, 900); // 50vw or max 900px
+            const gap = 48; // space-x-12 (48px)
+            const sideSlideWidth =
+              (viewportWidth - mainSlideWidth - 2 * gap) / 2;
+
+            // Apply CSS variables for dynamic styling (optional but good practice)
+            document.documentElement.style.setProperty(
+              "--main-slide-width",
+              `${mainSlideWidth}px`
+            );
+            document.documentElement.style.setProperty("--gap", `${gap}px`);
+
+            // The left-most edge of the active slide.
+            // This is the sum of (side slide widths + gaps) for slides before the current one
+            let currentSlideLeftEdge = 0;
+            for (let i = 0; i < currentIndex; i++) {
+              currentSlideLeftEdge +=
+                (i === currentIndex - 1 ? mainSlideWidth : sideSlideWidth) +
+                gap;
+            }
+            if (currentIndex > 0) {
+              // All previous slides are "side slides"
+              currentSlideLeftEdge = currentIndex * (sideSlideWidth + gap);
+            }
+
+            // To center the active slide:
+            // We need to shift the wrapper left by (currentSlideLeftEdge - (viewportWidth - activeSlideWidth) / 2)
+            const activeSlideActualWidth = slides[currentIndex].offsetWidth; // Get computed width after CSS var application
+
+            // Total width of visible slides (side + main + side + 2*gap)
+            const totalVisibleWidth =
+              sideSlideWidth + mainSlideWidth + sideSlideWidth + 2 * gap;
+
+            // Calculate the offset to center the `currentIndex` slide
+            // The calculation ensures the `currentIndex` slide starts at `(viewportWidth - activeSlideActualWidth) / 2`
+            // relative to the wrapper's current position.
+
+            // The amount we need to shift from the beginning of the wrapper to center the current slide.
+            // We need to account for all preceding slides (which are side slides) + their gaps.
+            let offsetToCurrentSlideStart = 0;
+            for (let i = 0; i < currentIndex; i++) {
+              offsetToCurrentSlideStart += slides[i].offsetWidth + gap;
+            }
+
+            // How much space is on the left of the current active slide, within the viewport?
+            // This is (viewportWidth - activeSlideActualWidth) / 2
+            const centeringOffset =
+              (viewportWidth - activeSlideActualWidth) / 2;
+
+            translateX = -(offsetToCurrentSlideStart - centeringOffset);
+          } else {
+            // --- Mobile Layout: One large slide, with peeking sides ---
+            const currentSlide = slides[currentIndex];
+            const slideWidth = currentSlide.offsetWidth;
+            const style = window.getComputedStyle(currentSlide);
+            const marginRight = parseFloat(style.marginRight); // Typically 16px (space-x-4)
+
+            const viewport = wrapper.parentElement;
+            const viewportWidth = viewport.offsetWidth;
+
+            // Calculate how much "peek" we want on each side
+            const peekWidth = (viewportWidth - slideWidth) / 2;
+
+            // We want the current slide to be centered in the viewport.
+            // Its left edge should be at `peekWidth`.
+            // The wrapper needs to be translated so that the current slide's start is at `peekWidth`.
+
+            let offsetToCurrentSlideStart = 0;
+            for (let i = 0; i < currentIndex; i++) {
+              offsetToCurrentSlideStart += slides[i].offsetWidth + marginRight;
+            }
+
+            translateX = -(offsetToCurrentSlideStart - peekWidth);
+          }
+
+          wrapper.style.transform = `translateX(${translateX}px)`;
+        };
+
+        /**
+         * Updates the disabled state of the navigation buttons.
+         */
+        const updateButtonState = () => {
+          prevBtn.disabled = currentIndex === 0;
+          nextBtn.disabled = currentIndex === slideCount - 1;
+        };
+
+        /**
+         * Moves the slider to the previous slide.
+         */
+        const prevSlide = () => {
+          if (currentIndex > 0) {
+            currentIndex--;
+            updateSliderPosition();
+            updateButtonState();
+          }
+        };
+
+        /**
+         * Moves the slider to the next slide.
+         */
+        const nextSlide = () => {
+          if (currentIndex < slideCount - 1) {
+            currentIndex++;
+            updateSliderPosition();
+            updateButtonState();
+          }
+        };
+
+        // Attach event listeners
+        prevBtn.addEventListener("click", prevSlide);
+        nextBtn.addEventListener("click", nextSlide);
+
+        // Re-calculate on resize for responsiveness
+        window.addEventListener("resize", () => {
+          // Introduce a debounce to prevent excessive recalculations on resize
+          clearTimeout(window.resizeTimeout);
+          window.resizeTimeout = setTimeout(() => {
+            updateSliderPosition();
+          }, 100);
+        });
+
+        // Initial position and button states
+        updateSliderPosition();
+        updateButtonState();
+      });
+    </script>
+  </body>
+</html>

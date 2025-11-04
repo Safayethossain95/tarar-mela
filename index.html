@@ -32,6 +32,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
     <style>
       /* Apply the Bengali font */
       @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
@@ -251,6 +252,78 @@
       .cursor-dot.active {
         transform: translate(-50%, -50%) scale(0); /* Hide the dot when active */
       }
+      .animated-title {
+        position: relative;
+        display: inline-block;
+        font-size: 2rem;
+        color: #333;
+      }
+
+      /* The animated line */
+      .animated-title::after {
+        content: "";
+        position: absolute;
+        bottom: -2px; /* at the bottom of h2 */
+        left: 50%; /* start from center */
+        height: 4px;
+        width: 0;
+        background-color: #000; /* golden color */
+        transform: translateX(-50%);
+        animation: underlineFlow 2.5s ease-in-out infinite;
+      }
+
+      /* Keyframes for line animation */
+      @keyframes underlineFlow {
+        0% {
+          width: 0;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+        25% {
+          width: 50%;
+          left: 50%;
+          transform: translateX(0);
+        }
+        50% {
+          width: 50%;
+          left: 0;
+          transform: translateX(0);
+        }
+        75% {
+          width: 50%;
+          left: 0;
+        }
+        100% {
+          width: 0;
+          left: 50%;
+          transform: translateX(50%);
+        }
+      }
+      @keyframes zoomInCenter {
+        0% {
+          transform: scale(0.85);
+          opacity: 0;
+        }
+        60% {
+          transform: scale(1.02);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes zoomInCenter {
+        0% {
+          transform: scale(0.9);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
     </style>
   </head>
   <body>
@@ -407,13 +480,24 @@
                     - Using <span> blocks for line breaks, matching the image.
                   -->
               <h1
-                class="text-xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-black whitespace-nowrap"
+                data-aos="zoom-in"
+                class="text-xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 drop-shadow-md"
               >
                 সুরের জাদুতে
-                <span class="block mt-2 md:mt-4 font-bold"
-                  >আপনার অনুষ্ঠানে</span
+                <span
+                  data-aos="zoom-in"
+                  data-aos-delay="150"
+                  class="block mt-2 md:mt-4 font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#ff7eb3] via-[#ff758c] to-[#ff7eb3]"
                 >
-                <span class="block mt-2 md:mt-4 font-bold">প্রাণের ছোয়া</span>
+                  আপনার অনুষ্ঠানে
+                </span>
+                <span
+                  data-aos="zoom-in"
+                  data-aos-delay="300"
+                  class="block mt-2 md:mt-4 font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FF8C00]"
+                >
+                  প্রাণের ছোয়া
+                </span>
               </h1>
             </div>
           </div>
@@ -508,7 +592,9 @@
         </div>
         <div class="content my-auto">
           <div class="heading">
-            <h2 class="text-3xl mb-2">আমাদের গল্প</h2>
+            <h2 class="text-3xl lg:text-4xl mb-2 animated-title">
+              আমাদের গল্প
+            </h2>
             <p>
               তারার মেলা শিল্পী সংঘ হলো একদল সঙ্গীত প্রেমী শিল্পীর সংগঠন, যারা
               সুরের মাধ্য মে আনন্দ ছড়িয়ে দিতে বিশ্বাসী। আধুনিক গান থেকে শুরু করে
@@ -524,15 +610,27 @@
     </div>
     <div class="max-w-7xl mx-auto px-4 pt-10 md:pt-20">
       <!-- Section Title: "আমাদের সেবা:" -->
-      <h1 class="text-3xl md:text-4xl font-semibold text-gray-900 mb-8">
-        আমাদের সেবা:
-      </h1>
+      <div class="text-center">
+        <h1
+          class="text-3xl animated-title md:text-4xl font-semibold text-gray-900 mb-8 lg:mb-14"
+        >
+          আমাদের সেবা
+        </h1>
+      </div>
 
       <!-- Services Grid Container -->
       <div
         class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-6 md:gap-8"
       >
         <!-- Card Data Definition and Rendering Script -->
+        <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+        <script>
+          AOS.init({
+            duration: 500, // matches Tailwind's duration-500
+            easing: "ease-out",
+            once: true, // animation runs only once
+          });
+        </script>
         <script>
           const customCursor = document.getElementById("customCursor");
           const cursorDot = document.getElementById("cursorDot");
@@ -670,8 +768,10 @@
       </div>
     </div>
     <!-- swiper -->
-    <div id="stars" class="w-full max-w-7xl mx-auto px-4 pt-20">
-      <h1 class="text-3xl md:text-4xl font-semibold text-gray-900">
+    <div id="stars" class="w-full max-w-7xl text-center mx-auto px-4 pt-20">
+      <h1
+        class="text-3xl md:text-4xl font-semibold text-gray-900 animated-title mb-8 lg:mb-14"
+      >
         আমাদের শিল্পীরা
       </h1>
     </div>
@@ -684,14 +784,18 @@
         <div class="swiper-wrapper">
           <div class="swiper-slide">
             <div
-              class="bg-white h-auto max-w-[270px] py-4"
+              class="bg-white h-auto max-w-[270px] group py-4"
               onclick="openPopup('মিজান মাহমুদ রাজিব', 'আধুনিক গানের শিল্পী', '“গান কেবল বিনোদন নয়, এটি অনুভূতির সেতুবন্ধন।” আধুনিক গানের ধারায় মিজান মাহমুদ রাজিব এক উজ্জ্বল নাম। তাঁর কণ্ঠে ফুটে ওঠে প্রেম, প্রকৃতি ও জীবনের নানা রঙ। তাঁর গাওয়া গান গুলো শুধু শ্রোতার মন জয় করেনা, বরং হৃদয়ে ছুঁয়ে যায় এক নরম সুরে— যেন তিনি গাইছেন ভালোবাসার ভাষায় জীবনেরগল্প।')"
             >
-              <img
-                src="shilpi-1.png"
-                class="mx-auto h-[80%] object-cover rounded-xl"
-                alt=""
-              />
+              <div
+                class="rounded-full overflow-hidden w-fit mx-auto mb-3 group-hover:scale-105 transition-transform duration-500"
+              >
+                <img
+                  src="artist1.jpg"
+                  class="mx-auto h-[100px] w-[100px] lg:h-[160px] lg:w-[160px] object-cover border border-black rounded-full"
+                  alt=""
+                />
+              </div>
               <p class="text-center text-md lg:text-2xl font-bold">
                 মিজান মাহমুদ রাজিব
               </p>
@@ -700,14 +804,18 @@
           </div>
           <div class="swiper-slide">
             <div
-              class="bg-white h-auto max-w-[270px] w-full py-4"
-              onclick="openPopup('ইসরাত জাহান জুই', 'ফোক সংগীতের প্রাণ', '“ফোক সংগীত মানেই শেকড়ের টান, মাটির গন্ধ আর মানুষের হাসি-কান্না।” ইসরাত জাহান জুই ফোক সংগীতে নিয়ে এসেছেন এক নতুন প্রাণচাঞ্চল্য। তাঁর গানে আছে নদীর ঢেউ, মাঠের গন্ধ, আর বাংলার মাটির সহজ সৌন্দর্য। তাঁর কণ্ঠে ফোক গান হয়ে ওঠে ভালোবাসা ও ঐতিহ্যের এক জীবন্তগল্প। ')"
+              class="bg-white h-auto max-w-[270px] group w-full py-4"
+              onclick="openPopup('ইসরাত জাহান জুই', 'ফোক সংগীতের প্রাণ', '“ফোক সংগীত মানেই শেকড়ের টান, মাটির গন্ধ আর মানুষের হাসি-কান্না।” ইসরাত জাহান জুই ফোক সংগীতে নিয়ে এসেছেন এক নতুন প্রাণচাঞ্চল্য। তাঁর গানে আছে নদীর ঢেউ, মাঠের গন্ধ, আর বাংলার মাটির সহজ সৌন্দর্য। তাঁর কণ্ঠে ফোক গান হয়ে ওঠে ভালোবাসা ও ঐতিহ্যের এক জীবন্তগল্প। ')"
             >
-              <img
-                src="shilpi-1.png"
-                class="mx-auto h-[80%] object-cover rounded-xl"
-                alt=""
-              />
+              <div
+                class="rounded-full overflow-hidden w-fit mx-auto mb-3 group-hover:scale-105 transition-transform duration-500"
+              >
+                <img
+                  src="artist2.jpg"
+                  class="mx-auto h-[100px] w-[100px] lg:h-[160px] lg:w-[160px] object-cover border border-black rounded-full"
+                  alt=""
+                />
+              </div>
               <p class="text-center text-md lg:text-2xl font-bold">
                 ইসরাত জাহান জুই
               </p>
@@ -716,14 +824,18 @@
           </div>
           <div class="swiper-slide">
             <div
-              class="bg-white h-auto max-w-[270px] w-full py-4"
+              class="bg-white h-auto max-w-[270px] group w-full py-4"
               onclick="openPopup('শেফালী সরকার', 'বাউল সংগীতের সাধনা','“মনুষ্যত্বই বাউল গানের আসল সাধনা।” শেফালী সরকার বাউল গানে খুঁজে পান মুক্তিরপথ। লালন, হাছন, রাধা রমণের সুর তাঁর কণ্ঠে পায় নতুন রূপ, নতুন অনুভব। তাঁর গানে আছে সত্য, ভালোবাসা ও মানুষকে জানার অদম্য তৃষ্ণা। তিনি বাউল দর্শনের এক জাগ্রতপ্রতীক।')"
             >
-              <img
-                src="shilpi-1.png"
-                class="mx-auto h-[80%] object-cover rounded-xl"
-                alt=""
-              />
+              <div
+                class="rounded-full overflow-hidden w-fit mx-auto mb-3 group-hover:scale-105 transition-transform duration-500"
+              >
+                <img
+                  src="artist3.png"
+                  class="mx-auto h-[100px] w-[100px] lg:h-[160px] lg:w-[160px] object-cover border border-black rounded-full"
+                  alt=""
+                />
+              </div>
               <p class="text-center text-md lg:text-2xl font-bold">
                 শেফালী সরকার
               </p>
@@ -733,28 +845,36 @@
 
           <div class="swiper-slide">
             <div
-              class="bg-white h-auto max-w-[270px] w-full py-4"
+              class="bg-white h-auto max-w-[270px] group w-full py-4"
               onclick="openPopup('সোহরাব', 'গিটারিস্ট','“তার ছোঁয়ায় জীবন্ত হয় সুরের নীরবতা।” সোহরাবের গিটার বাজনা যেন আত্মার প্রতিধ্বনি। তিনি সুরকে রূপ দেন এমন এক ছন্দে, যা শ্রোতার মনের ভেতর ঢেউ তোলে। তাঁর গিটার সুরে আধুনিক সংগীত পায় নতুন প্রাণ।')"
             >
-              <img
-                src="shilpi-1.png"
-                class="mx-auto h-[80%] object-cover rounded-xl"
-                alt=""
-              />
+              <div
+                class="rounded-full overflow-hidden w-fit mx-auto mb-3 group-hover:scale-105 transition-transform duration-500"
+              >
+                <img
+                  src="artist4.png"
+                  class="mx-auto h-[100px] w-[100px] lg:h-[160px] lg:w-[160px] object-cover border border-black rounded-full"
+                  alt=""
+                />
+              </div>
               <p class="text-center text-md lg:text-2xl font-bold">সোহরাব</p>
               <p class="text-center text-sm lg:text-md">গিটারিস্ট</p>
             </div>
           </div>
           <div class="swiper-slide">
             <div
-              class="bg-white h-auto max-w-[270px] w-full py-4"
+              class="bg-white h-auto max-w-[270px] group w-full py-4"
               onclick="openPopup('মো: রিয়াদ সিকদার', 'গিটারিস্ট','“প্রতিটি নোটেই মিশে থাকে ছন্দ আর হৃদয়ের উষ্ণতা।” রিয়াদ সিকদারের গিটার বাজনা আধুনিক সংগীতকে দিয়েছে নতুন মাত্রা। তাঁর হাতে সুর গুলো রঙ বদলায়, কখনও নরম, কখনও ঝড়ের মতো তেজি। তিনি সংগীতকে শুধু শুনিয়ে যাননা, অনুভব করান।')"
             >
-              <img
-                src="shilpi-1.png"
-                class="mx-auto h-[80%] object-cover rounded-xl"
-                alt=""
-              />
+              <div
+                class="rounded-full overflow-hidden w-fit mx-auto mb-3 group-hover:scale-105 transition-transform duration-500"
+              >
+                <img
+                  src="artist5.jpeg"
+                  class="mx-auto h-[100px] w-[100px] lg:h-[160px] lg:w-[160px] object-cover border border-black rounded-full"
+                  alt=""
+                />
+              </div>
               <p class="text-center text-md lg:text-2xl font-bold">
                 মো: রিয়াদ সিকদার
               </p>
@@ -763,14 +883,18 @@
           </div>
           <div class="swiper-slide">
             <div
-              class="bg-white h-auto max-w-[270px] w-full py-4"
+              class="bg-white h-auto max-w-[270px] group w-full py-4"
               onclick="openPopup('মো: জাকারিয়া হোসেন অন্তর', 'বাঁশি বাদক','“বাঁশির সুরেই প্রকৃতি কথা বলে।” অন্তরের বাঁশিতে সুর নয়, বরং কথা বলে জীবন। তাঁর বাজনায় মিশে থাকে গ্রামীণ নির্জন দুপুর, নদীর স্রোত, আর প্রকৃতির নরম মায়া। তিনি বাঁশির সুরে মানুষের মনে শান্তি ছড়িয়ে দেন।')"
             >
-              <img
-                src="shilpi-1.png"
-                class="mx-auto h-[80%] object-cover rounded-xl"
-                alt=""
-              />
+              <div
+                class="rounded-full overflow-hidden w-fit mx-auto mb-3 group-hover:scale-105 transition-transform duration-500"
+              >
+                <img
+                  src="artist6.png"
+                  class="mx-auto h-[100px] w-[100px] lg:h-[160px] lg:w-[160px] object-cover border border-black rounded-full"
+                  alt=""
+                />
+              </div>
               <p class="text-center text-md lg:text-xl font-bold">
                 মো: জাকারিয়া হোসেন অন্তর
               </p>
@@ -779,14 +903,18 @@
           </div>
           <div class="swiper-slide">
             <div
-              class="bg-white h-auto max-w-[270px] w-full py-4"
+              class="bg-white h-auto max-w-[270px] group w-full py-4"
               onclick="openPopup('বিল্লাল হোসাইন', 'মন্দিরা বাদক','“লোক সঙ্গীতের প্রাণস্পন্দন লুকিয়ে আছে মন্দিরার ছন্দে।” বিল্লাল হোসাইন তাঁর মন্দিরা বাজনায় ফোক সংগীতকে জীবন্ত করে তোলেন। তাঁর ছন্দে আছে মাটির গন্ধ, গ্রামীণ  উচ্ছ্বাসও আনন্দের ধ্বনি। তিনি দলের প্রতিটি পরিবেশনায় আনেন এক অপরিহার্য ছন্দের শক্তি।')"
             >
-              <img
-                src="shilpi-1.png"
-                class="mx-auto h-[80%] object-cover rounded-xl"
-                alt=""
-              />
+              <div
+                class="rounded-full overflow-hidden w-fit mx-auto mb-3 group-hover:scale-105 transition-transform duration-500"
+              >
+                <img
+                  src="artist7.png"
+                  class="mx-auto h-[100px] w-[100px] lg:h-[160px] lg:w-[160px] object-cover border border-black rounded-full"
+                  alt=""
+                />
+              </div>
               <p class="text-center text-md lg:text-xl font-bold">
                 বিল্লাল হোসাইন
               </p>
@@ -795,14 +923,18 @@
           </div>
           <div class="swiper-slide">
             <div
-              class="bg-white h-auto max-w-[270px] w-full py-4"
+              class="bg-white h-auto max-w-[270px] group w-full py-4"
               onclick="openPopup('সাইয়াদ আয়াজ আহমেদ', 'সাউন্ড ইঞ্জিনিয়ার','“নেপথ্যে থেকেও তিনি ইসংগীতের প্রাণ স্বরূপ।” আয়াজ আহমেদ প্রযুক্তির মাধ্যমে সুরে প্রাণ দেন। তিনি জানেন, সঠিক সাউন্ড ব্যালান্সই একটিপরিবেশনাকে করে তোলে নিখুঁতও পেশাদার। তাঁর দক্ষতাই সংগঠনের প্রতিটি অনুষ্ঠানে এনে দেয় নতুন শ্রুতি মাধুর্য।')"
             >
-              <img
-                src="shilpi-1.png"
-                class="mx-auto h-[80%] object-cover rounded-xl"
-                alt=""
-              />
+              <div
+                class="rounded-full overflow-hidden w-fit mx-auto mb-3 group-hover:scale-105 transition-transform duration-500"
+              >
+                <img
+                  src="artist8.png"
+                  class="mx-auto h-[100px] w-[100px] lg:h-[160px] lg:w-[160px] object-cover border border-black rounded-full"
+                  alt=""
+                />
+              </div>
               <p class="text-center text-md lg:text-xl font-bold">
                 সাইয়াদ আয়াজ আহমেদ
               </p>
@@ -811,14 +943,18 @@
           </div>
           <div class="swiper-slide">
             <div
-              class="bg-white h-auto max-w-[270px] w-full py-4"
+              class="bg-white h-auto max-w-[270px] group w-full py-4"
               onclick="openPopup('ফারিয়া আহাম্মদ তানজিনা', 'উপস্থাপিকা','“উপস্থাপনা মানে শুধু বলা নয়, অনুভূতির সেতু বন্ধন গড়ে তোলা।” তানজিনা তাঁর আত্মবিশ্বাসী কণ্ঠ ও সুশৃঙ্খল উপস্থাপনায় অনুষ্ঠানকে প্রাণবন্ত করে তোলেন। তিনি জানেন কীভাবে দর্শক ও শিল্পীর মধ্যে এক উষ্ণ যোগাযোগ স্থাপন করতে হয়। তাঁর কণ্ঠে প্রতিটি অনুষ্ঠান পায় এক নতুন মাত্রা।')"
             >
-              <img
-                src="shilpi-1.png"
-                class="mx-auto h-[80%] object-cover rounded-xl"
-                alt=""
-              />
+              <div
+                class="rounded-full overflow-hidden w-fit mx-auto mb-3 group-hover:scale-105 transition-transform duration-500"
+              >
+                <img
+                  src="artist9.png"
+                  class="mx-auto h-[100px] w-[100px] lg:h-[160px] lg:w-[160px] object-cover border border-black rounded-full"
+                  alt=""
+                />
+              </div>
               <p class="text-center text-md lg:text-xl font-bold">
                 ফারিয়া আহাম্মদ তানজিনা
               </p>
@@ -826,6 +962,29 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <!-- Image Popup -->
+    <div
+      id="imagePopup"
+      class="fixed top-0 left-0 inset-0 w-full h-screen bg-black/80 hidden items-center justify-center z-50"
+    >
+      <div
+        class="max-w-[90%] max-h-[90%] mx-auto p-4 rounded-2xl overflow-auto no-scrollbar transform transition-all scale-90 opacity-0 duration-300"
+        id="imagePopupContent"
+      >
+        <button
+          onclick="closeImagePopup()"
+          class="absolute top-10 right-8 text-black rounded-full transition duration-150 z-50"
+        >
+          ✕
+        </button>
+        <img
+          src=""
+          alt="Full Image"
+          id="popupImage"
+          class="w-full h-full object-contain rounded-lg"
+        />
       </div>
     </div>
     <div
@@ -899,7 +1058,9 @@
     <div id="gallery" class="mx-auto py-12 mt-[310px] lg:mt-[400px]">
       <!-- Header Content -->
       <header class="text-center mb-12 px-4">
-        <h1 class="text-3xl md:text-4xl font-extrabold mb-2 text-gray-800">
+        <h1
+          class="text-3xl md:text-4xl font-extrabold mb-2 text-gray-800 animated-title"
+        >
           গ্যালারি / পারফর্মেন্স
         </h1>
         <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
@@ -914,7 +1075,7 @@
           <!-- Slide 1: Main Event -->
           <div class="slider-item" data-index="0">
             <img
-              src="gallery.png"
+              src="show2.png"
               alt="Main performance on stage"
               class="w-full object-contain"
             />
@@ -923,7 +1084,7 @@
           <!-- Slide 2: Rehearsal -->
           <div class="slider-item" data-index="1">
             <img
-              src="gallery.png"
+              src="show10.jpg"
               alt="Artists preparing for an event"
               class="w-full object-contain"
             />
@@ -932,7 +1093,7 @@
           <!-- Slide 3: Dancers -->
           <div class="slider-item" data-index="2">
             <img
-              src="gallery.png"
+              src="show3.jpg"
               alt="Group of dancers performing"
               class="w-full object-contain"
             />
@@ -941,7 +1102,7 @@
           <!-- Slide 4: Music -->
           <div class="slider-item" data-index="3">
             <img
-              src="gallery.png"
+              src="show4.jpg"
               alt="Musicians playing instruments"
               class="w-full object-contain"
             />
@@ -950,7 +1111,42 @@
           <!-- Slide 5: Portrait -->
           <div class="slider-item" data-index="4">
             <img
-              src="gallery.png"
+              src="show5.jpg"
+              alt="Artist portrait photo"
+              class="w-full object-contain"
+            />
+          </div>
+          <div class="slider-item" data-index="4">
+            <img
+              src="show6.jpg"
+              alt="Artist portrait photo"
+              class="w-full object-contain"
+            />
+          </div>
+          <div class="slider-item" data-index="4">
+            <img
+              src="show7.jpg"
+              alt="Artist portrait photo"
+              class="w-full object-contain"
+            />
+          </div>
+          <div class="slider-item" data-index="4">
+            <img
+              src="show8.jpg"
+              alt="Artist portrait photo"
+              class="w-full object-contain"
+            />
+          </div>
+          <div class="slider-item" data-index="4">
+            <img
+              src="show9.jpg"
+              alt="Artist portrait photo"
+              class="w-full object-contain"
+            />
+          </div>
+          <div class="slider-item" data-index="4">
+            <img
+              src="show2.png"
               alt="Artist portrait photo"
               class="w-full object-contain"
             />
@@ -1000,7 +1196,115 @@
     </div>
     <div class="text-center">
       <h1
-        class="text-xl lg:text-3xl md:text-4xl font-semibold text-gray-900 mt-10"
+        class="text-xl lg:text-3xl md:text-4xl font-semibold text-gray-900 mt-10 animated-title"
+      >
+        আর্টিকেল / নিউজ
+      </h1>
+    </div>
+    <div class="max-w-5xl mx-auto my-[3rem] px-4">
+      <!-- Testimonials Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <img
+          src="news1.jpeg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+        <img
+          src="news2.jpeg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+        <img
+          src="news3.jpg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+        <img
+          src="news4.jpg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+        <img
+          src="news5.jpg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+        <img
+          src="news6.jpg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+        <img
+          src="news7.jpg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+        <img
+          src="news8.jpg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+        <img
+          src="news9.jpg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+        <img
+          src="news10.jpg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+        <img
+          src="news11.jpg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+        <img
+          src="news12.jpg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+        <img
+          src="news13.jpg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+        <img
+          src="news14.jpg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+        <img
+          src="news15.jpg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+        <img
+          src="news16.jpg"
+          alt=""
+          class="w-full h-64 object-cover object-top rounded-lg"
+          onclick="openImagePopup(this.src)"
+        />
+      </div>
+    </div>
+    <div class="text-center">
+      <h1
+        class="text-xl lg:text-3xl md:text-4xl font-semibold text-gray-900 mt-10 animated-title"
       >
         আমাদের সম্পর্কে যাঁরা বলেছেন
       </h1>
@@ -1159,21 +1463,21 @@
               <!-- Social Icons (Now using Font Awesome 6.5.2) -->
               <a
                 href="#"
-                class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-teal-400 hover:text-slate-900 transition duration-300 ease-in-out"
+                class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-white hover:text-slate-900 transition duration-300 ease-in-out"
                 aria-label="Facebook"
               >
                 <i class="fa-brands fa-facebook-f text-xl"></i>
               </a>
               <a
                 href="https://wa.me/01400000000"
-                class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-teal-400 hover:text-slate-900 transition duration-300 ease-in-out"
+                class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-white hover:text-slate-900 transition duration-300 ease-in-out"
                 aria-label="WhatsApp"
               >
                 <i class="fa-brands fa-whatsapp text-xl"></i>
               </a>
               <a
                 href="#"
-                class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-teal-400 hover:text-slate-900 transition duration-300 ease-in-out"
+                class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-white hover:text-slate-900 transition duration-300 ease-in-out"
                 aria-label="Instagram"
               >
                 <i class="fa-brands fa-instagram text-xl"></i>
@@ -1207,6 +1511,31 @@
     <!-- জাভাস্ক্রিপ্ট -->
     <script>
       // মেনু বাটন এবং মোবাইল মেনু সিলেক্ট করা
+      const imgPopup = document.getElementById("imagePopup");
+      const imgPopupContent = document.getElementById("imagePopupContent");
+      const popupImage = document.getElementById("popupImage");
+
+      function openImagePopup(src) {
+        popupImage.src = src;
+        imgPopup.classList.remove("hidden");
+        setTimeout(() => {
+          imgPopupContent.classList.remove("scale-90", "opacity-0");
+          imgPopupContent.classList.add("scale-100", "opacity-100");
+        }, 10);
+      }
+
+      function closeImagePopup() {
+        imgPopupContent.classList.add("scale-90", "opacity-0");
+        imgPopupContent.classList.remove("scale-100", "opacity-100");
+        setTimeout(() => {
+          imgPopup.classList.add("hidden");
+        }, 200);
+      }
+
+      // Close if clicking outside the image
+      imgPopup.addEventListener("click", (e) => {
+        if (e.target === imgPopup) closeImagePopup();
+      });
       const menuButton = document.getElementById("mobile-menu-button");
       const mobileMenu = document.getElementById("mobile-menu");
       const hamburgerIcon = document.getElementById("hamburger-icon");

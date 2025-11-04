@@ -1554,6 +1554,11 @@
         spaceBetween: 20,
         grabCursor: true,
         freeMode: true,
+        loop: true, // optional but usually needed for autoplay
+        autoplay: {
+          delay: 2000, // 3 seconds between slides
+          disableOnInteraction: false, // continue autoplay after user interaction
+        },
         mousewheel: {
           forceToAxis: true,
         },
@@ -1621,162 +1626,99 @@
           },
         },
       };
-      document.addEventListener("DOMContentLoaded", () => {
-        const wrapper = document.getElementById("slider-wrapper");
-        const slides = document.querySelectorAll(".slider-item");
-        const prevBtn = document.getElementById("prev-btn");
-        const nextBtn = document.getElementById("next-btn");
-        let currentIndex = 1;
-        const slideCount = slides.length;
+     document.addEventListener("DOMContentLoaded", () => {
+  const wrapper = document.getElementById("slider-wrapper");
+  const slides = document.querySelectorAll(".slider-item");
+  const prevBtn = document.getElementById("prev-btn");
+  const nextBtn = document.getElementById("next-btn");
+  let currentIndex = 1; // start from 0 for easier looping
+  const slideCount = slides.length;
 
-        // Define breakpoints for responsiveness
-        const MD_BREAKPOINT = 768; // Tailwind's 'md' breakpoint
+  const MD_BREAKPOINT = 768;
 
-        /**
-         * Calculates the required horizontal translation for the slider wrapper
-         * to center the current slide based on screen size and desired layout.
-         */
-        const updateSliderPosition = () => {
-          if (slideCount === 0) return;
+  const updateSliderPosition = () => {
+    if (slideCount === 0) return;
 
-          const viewportWidth = wrapper.parentElement.offsetWidth;
-          let translateX = 0;
+    const viewportWidth = wrapper.parentElement.offsetWidth;
+    let translateX = 0;
 
-          // Remove active class from all first, then add to current
-          slides.forEach((slide) => slide.classList.remove("active-slide"));
-          slides[currentIndex].classList.add("active-slide");
+    slides.forEach((slide) => slide.classList.remove("active-slide"));
+    slides[currentIndex].classList.add("active-slide");
 
-          if (window.innerWidth >= MD_BREAKPOINT) {
-            // --- Desktop / Tablet Layout: Center slide is larger ---
+    if (window.innerWidth >= MD_BREAKPOINT) {
+      const mainSlideWidth = Math.min(window.innerWidth * 0.5, 900);
+      const gap = 48;
+      const sideSlideWidth = (viewportWidth - mainSlideWidth - 2 * gap) / 2;
 
-            // Define widths and gap as CSS variables for easier use and consistency
-            // These should match your CSS media queries for side/main slide widths
-            // For calculation, we'll use fixed pixel values or percentages.
-            const mainSlideWidth = Math.min(window.innerWidth * 0.5, 900); // 50vw or max 900px
-            const gap = 48; // space-x-12 (48px)
-            const sideSlideWidth =
-              (viewportWidth - mainSlideWidth - 2 * gap) / 2;
+      document.documentElement.style.setProperty("--main-slide-width", `${mainSlideWidth}px`);
+      document.documentElement.style.setProperty("--gap", `${gap}px`);
 
-            // Apply CSS variables for dynamic styling (optional but good practice)
-            document.documentElement.style.setProperty(
-              "--main-slide-width",
-              `${mainSlideWidth}px`
-            );
-            document.documentElement.style.setProperty("--gap", `${gap}px`);
+      let offsetToCurrentSlideStart = 0;
+      for (let i = 0; i < currentIndex; i++) {
+        offsetToCurrentSlideStart += slides[i].offsetWidth + gap;
+      }
+      const activeSlideActualWidth = slides[currentIndex].offsetWidth;
+      const centeringOffset = (viewportWidth - activeSlideActualWidth) / 2;
+      translateX = -(offsetToCurrentSlideStart - centeringOffset);
+    } else {
+      const currentSlide = slides[currentIndex];
+      const slideWidth = currentSlide.offsetWidth;
+      const style = window.getComputedStyle(currentSlide);
+      const marginRight = parseFloat(style.marginRight);
+      const viewportWidth = wrapper.parentElement.offsetWidth;
+      const peekWidth = (viewportWidth - slideWidth) / 2;
 
-            // The left-most edge of the active slide.
-            // This is the sum of (side slide widths + gaps) for slides before the current one
-            let currentSlideLeftEdge = 0;
-            for (let i = 0; i < currentIndex; i++) {
-              currentSlideLeftEdge +=
-                (i === currentIndex - 1 ? mainSlideWidth : sideSlideWidth) +
-                gap;
-            }
-            if (currentIndex > 0) {
-              // All previous slides are "side slides"
-              currentSlideLeftEdge = currentIndex * (sideSlideWidth + gap);
-            }
+      let offsetToCurrentSlideStart = 0;
+      for (let i = 0; i < currentIndex; i++) {
+        offsetToCurrentSlideStart += slides[i].offsetWidth + marginRight;
+      }
+      translateX = -(offsetToCurrentSlideStart - peekWidth);
+    }
 
-            // To center the active slide:
-            // We need to shift the wrapper left by (currentSlideLeftEdge - (viewportWidth - activeSlideWidth) / 2)
-            const activeSlideActualWidth = slides[currentIndex].offsetWidth; // Get computed width after CSS var application
+    wrapper.style.transform = `translateX(${translateX}px)`;
+  };
 
-            // Total width of visible slides (side + main + side + 2*gap)
-            const totalVisibleWidth =
-              sideSlideWidth + mainSlideWidth + sideSlideWidth + 2 * gap;
+  const updateButtonState = () => {
+    prevBtn.disabled = false; // never disable for loop
+    nextBtn.disabled = false;
+  };
 
-            // Calculate the offset to center the `currentIndex` slide
-            // The calculation ensures the `currentIndex` slide starts at `(viewportWidth - activeSlideActualWidth) / 2`
-            // relative to the wrapper's current position.
+  const prevSlide = () => {
+    currentIndex = (currentIndex - 1 + slideCount) % slideCount; // loop back
+    updateSliderPosition();
+    updateButtonState();
+  };
 
-            // The amount we need to shift from the beginning of the wrapper to center the current slide.
-            // We need to account for all preceding slides (which are side slides) + their gaps.
-            let offsetToCurrentSlideStart = 0;
-            for (let i = 0; i < currentIndex; i++) {
-              offsetToCurrentSlideStart += slides[i].offsetWidth + gap;
-            }
+  const nextSlide = () => {
+    currentIndex = (currentIndex + 1) % slideCount; // loop forward
+    updateSliderPosition();
+    updateButtonState();
+  };
 
-            // How much space is on the left of the current active slide, within the viewport?
-            // This is (viewportWidth - activeSlideActualWidth) / 2
-            const centeringOffset =
-              (viewportWidth - activeSlideActualWidth) / 2;
+  prevBtn.addEventListener("click", prevSlide);
+  nextBtn.addEventListener("click", nextSlide);
 
-            translateX = -(offsetToCurrentSlideStart - centeringOffset);
-          } else {
-            // --- Mobile Layout: One large slide, with peeking sides ---
-            const currentSlide = slides[currentIndex];
-            const slideWidth = currentSlide.offsetWidth;
-            const style = window.getComputedStyle(currentSlide);
-            const marginRight = parseFloat(style.marginRight); // Typically 16px (space-x-4)
+  window.addEventListener("resize", () => {
+    clearTimeout(window.resizeTimeout);
+    window.resizeTimeout = setTimeout(() => {
+      updateSliderPosition();
+    }, 100);
+  });
 
-            const viewport = wrapper.parentElement;
-            const viewportWidth = viewport.offsetWidth;
+  // **Autoplay: move to next slide every 2 seconds**
+  const autoplayInterval = 2000; // 2 seconds
+  let autoplay = setInterval(nextSlide, autoplayInterval);
 
-            // Calculate how much "peek" we want on each side
-            const peekWidth = (viewportWidth - slideWidth) / 2;
+  // Optional: pause autoplay on hover
+  // wrapper.addEventListener("mouseenter", () => clearInterval(autoplay));
+  // wrapper.addEventListener("mouseleave", () => {
+  //   autoplay = setInterval(nextSlide, autoplayInterval);
+  // });
 
-            // We want the current slide to be centered in the viewport.
-            // Its left edge should be at `peekWidth`.
-            // The wrapper needs to be translated so that the current slide's start is at `peekWidth`.
-
-            let offsetToCurrentSlideStart = 0;
-            for (let i = 0; i < currentIndex; i++) {
-              offsetToCurrentSlideStart += slides[i].offsetWidth + marginRight;
-            }
-
-            translateX = -(offsetToCurrentSlideStart - peekWidth);
-          }
-
-          wrapper.style.transform = `translateX(${translateX}px)`;
-        };
-
-        /**
-         * Updates the disabled state of the navigation buttons.
-         */
-        const updateButtonState = () => {
-          prevBtn.disabled = currentIndex === 0;
-          nextBtn.disabled = currentIndex === slideCount - 1;
-        };
-
-        /**
-         * Moves the slider to the previous slide.
-         */
-        const prevSlide = () => {
-          if (currentIndex > 0) {
-            currentIndex--;
-            updateSliderPosition();
-            updateButtonState();
-          }
-        };
-
-        /**
-         * Moves the slider to the next slide.
-         */
-        const nextSlide = () => {
-          if (currentIndex < slideCount - 1) {
-            currentIndex++;
-            updateSliderPosition();
-            updateButtonState();
-          }
-        };
-
-        // Attach event listeners
-        prevBtn.addEventListener("click", prevSlide);
-        nextBtn.addEventListener("click", nextSlide);
-
-        // Re-calculate on resize for responsiveness
-        window.addEventListener("resize", () => {
-          // Introduce a debounce to prevent excessive recalculations on resize
-          clearTimeout(window.resizeTimeout);
-          window.resizeTimeout = setTimeout(() => {
-            updateSliderPosition();
-          }, 100);
-        });
-
-        // Initial position and button states
-        updateSliderPosition();
-        updateButtonState();
-      });
+  // Initial setup
+  updateSliderPosition();
+  updateButtonState();
+});
     </script>
   </body>
 </html>
